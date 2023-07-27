@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SSE Web Page</title>
+</head>
+<body>
+  <table>
+	  <th>	
+		  <h3>Appointment Booking</h3>
+	  </th>
+	  <tr>
+			<td>First name:</td>
+			<td><input type="text" id="firstName" placeholder="Enter First Name"></td>
+	  </tr>
+	  <tr>
+			<td>Last name:</td>
+			<td><input type="text" id="lastName" placeholder="Enter Last Name"></td>
+	  </tr>
+	  <tr>
+			<td>Mobile</td>
+			<td><input type="text" id="Mobile" placeholder="Mobile Number"></td>
+		</tr>
+		<tr>
+			<td>Appointment DateTime</td>
+			<td><input type="datetime-local" id="AptDateTime" placeholder="Preferred DateTime"></td>
+		</tr>
+		<tr>
+			<td>Operatory</td>
+			<td><input type="text" id="Operatory" placeholder="Operatory"></td>
+		</tr>
+		<tr>
+			<td>
+				<button onclick="sendDataToClient()">Book Appointment</button>
+			</td>
+		</tr>
+  </table>
+  
+  <script>
+    function sendDataToClient() {
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+	  const Mobile = document.getElementById("Mobile").value;
+	  const AptDateTime = document.getElementById("AptDateTime").value;
+	  const Operatory = document.getElementById("Operatory").value;
+		
+      fetch('/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ firstName, lastName })
+      })
+      .then((response) => response.text())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+    }
+  </script>
+</body>
+</html>
