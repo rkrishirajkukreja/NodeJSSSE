@@ -66,8 +66,8 @@ app.get('/events', (req, res) => {
 });
 
 app.post('/send', express.json(), (req, res) => {
-  const { firstName, lastName } = req.body;
-  const message = `Hello From Server - First Name: ${firstName}, Last Name: ${lastName}, Timestamp: ${new Date().toLocaleString()}\n`;
+  const { firstName, lastName, mobile, appointmenttime, operatory } = req.body;
+  const message = `Hello From Server - First Name: ${firstName}, Last Name: ${lastName}, Mobile: ${mobile}, ApptDateTime: ${appointmenttime}, Operatory: ${operatory} \n`;
   clients.forEach((client) => {
     client.write(`data: ${message}\n\n`);
   });
