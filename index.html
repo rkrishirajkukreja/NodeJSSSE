@@ -39,16 +39,16 @@
     function sendDataToClient() {
       const firstName = document.getElementById('firstName').value;
       const lastName = document.getElementById('lastName').value;
-	  const Mobile = document.getElementById("Mobile").value;
-	  const AptDateTime = document.getElementById("AptDateTime").value;
-	  const Operatory = document.getElementById("Operatory").value;
+	  const mobile = document.getElementById("Mobile").value;
+	  const aptDatetime = document.getElementById("AptDateTime").value;
+	  const operatory = document.getElementById("Operatory").value;
 		
       fetch('/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ firstName, lastName })
+        body: JSON.stringify({ firstName, lastName, mobile, aptDatetime, operatory })
       })
       .then((response) => response.text())
       .then((data) => console.log(data))
