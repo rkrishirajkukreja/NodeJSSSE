@@ -56,9 +56,11 @@
         .then(data => {
           const clientSelect = document.getElementById('clientSelect');
           data.clients.forEach(client => {
+	  if (client.trim() !== '') {		  
             const option = document.createElement('option');
             option.text = client;
             clientSelect.add(option);
+			  }
           });
         })
         .catch(console.error);
