@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,54 +6,83 @@
 </head>
 <body>
   <table>
-	  <th>	
-		  <h3>Appointment Booking</h3>
-	  </th>
-	  <tr>
-			<td>First name:</td>
-			<td><input type="text" id="firstName" placeholder="Enter First Name"></td>
-	  </tr>
-	  <tr>
-			<td>Last name:</td>
-			<td><input type="text" id="lastName" placeholder="Enter Last Name"></td>
-	  </tr>
-	  <tr>
-			<td>Mobile</td>
-			<td><input type="text" id="Mobile" placeholder="Mobile Number"></td>
-		</tr>
-		<tr>
-			<td>Appointment DateTime</td>
-			<td><input type="datetime-local" id="AptDateTime" placeholder="Preferred DateTime"></td>
-		</tr>
-		<tr>
-			<td>Operatory</td>
-			<td><input type="text" id="Operatory" placeholder="Operatory"></td>
-		</tr>
-		<tr>
-			<td>
-				<button onclick="sendDataToClient()">Book Appointment</button>
-			</td>
-		</tr>
+	<th> <h4>Register Client</h4> </th>
+	<tr>
+		<td><label for="clientName">Client Name:</label></td>
+		<td><input type="text" id="clientName" /></td>
+	</tr>
+	<tr>
+		<td colspan='2'><button onclick="registerClient()">Register Client</button></td>
+	</tr>
+  </table>  
+  <br />
+  <br />
+  <table>
+	<th><h4>Appointment Booking</h4></th>
+	<tr>
+		<td><label for="clientSelect">Select Client:</label></td>
+		<td><select id="clientSelect"></select></td>
+	</tr>
+	<tr>
+		<td><label for="firstName">First Name:</label></td>
+		<td><input type="text" id="firstName" /></td>
+	</tr>
+	<tr>
+		<td><label for="lastName">Last Name:</label></td>
+		<td><input type="text" id="lastName" /></td>
+	</tr>
+	<tr>
+		<td><label for="mobile">Mobile:</label></td>
+		<td><input type="text" id="mobile" /></td>
+	</tr>
+	<tr>
+		<td><label for="appointmentDateTime">Appointment DateTime:</label></td>
+		<td><input type="datetime-local" id="appointmentDateTime" /></td>
+	</tr>
+	<tr>
+		<td><label for="operatory">Operatory:</label></td>
+		<td><input type="text" id="operatory" /></td>
+	</tr>
+	<tr>
+		<td colspan='2'><button onclick="sendDataToClient()">Send Data to Client</button></td>
+	</tr>
   </table>
   
   <script>
+    function registerClient() {
+      const clientName = document.getElementById('clientName').value;
+      const clientSelect = document.getElementById('clientSelect');
+      const option = document.createElement('option');
+      option.text = clientName;
+      clientSelect.add(option);
+    }
+
     function sendDataToClient() {
+      const selectedClient = document.getElementById('clientSelect').value;
       const firstName = document.getElementById('firstName').value;
       const lastName = document.getElementById('lastName').value;
-	  const mobile = document.getElementById("Mobile").value;
-	  const aptDatetime = document.getElementById("AptDateTime").value;
-	  const operatory = document.getElementById("Operatory").value;
-		
-      fetch('/send', {
+      const mobile = document.getElementById('mobile').value;
+      const appointmentDateTime = document.getElementById('appointmentDateTime').value;
+      const operatory = document.getElementById('operatory').value;
+
+      const data = {
+        firstName,
+        lastName,
+        mobile,
+        appointmentDateTime,
+        operatory,
+      };
+
+      fetch(`/send-data-to-client?client=${selectedClient}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ firstName, lastName, mobile, aptDatetime, operatory })
+        body: JSON.stringify(data),
       })
-      .then((response) => response.text())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
+      .then(response => response.text())
+      .then(console.log)
+      .catch(console.error);
     }
   </script>
 </body>
