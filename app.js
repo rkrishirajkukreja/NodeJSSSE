@@ -16,6 +16,53 @@ app.get('/', (req, res) => {
 
 const clients = new Map();
 
+const registeredClientsFile = './registeredClients.txt';
+
+// Function to read the registered clients from the file
+function loadRegisteredClients() {
+  try {
+    const data = fs.readFileSync(registeredClientsFile, 'utf8');
+    const registeredClients = data.split(',');
+    registeredClients.forEach(clientId => clients.set(clientId, null));
+  } catch (err) {
+    console.error('Error reading registered clients file:', err);
+  }
+}
+
+// Function to save the registered clients to the file
+function saveRegisteredClients() {
+  try {
+    const registeredClients = Array.from(clients.keys()).join(',');
+    fs.writeFileSync(registeredClientsFile, registeredClients);
+  } catch (err) {
+    console.error('Error saving registered clients file:', err);
+  }
+}
+
+function isClientNameRegistered(clientName) {
+  return Array.from(clients.keys()).includes(clientName);
+}
+
+// Route to handle registering a new client
+app.get('/register-client', (req, res) => {
+  const clientName = req.query.clientName;
+  if (!clientName) {
+    res.status(400).send('Client name not specified.');
+    return;
+  }
+
+  if (isClientNameRegistered(clientName)) {
+    res.status(400).send('Client name already registered.');
+    return;
+  }
+
+  clients.set(clientName, null);
+  saveRegisteredClients(); // Save the updated client list to the file
+  res.send(`Client "${clientName}" registered.`);
+});
+	
+// Load the registered clients when the server starts
+loadRegisteredClients();
 // SSE endpoint for the clients to connect
 app.get('/sse/:clientId', (req, res) => {
   const clientId = req.params.clientId;
@@ -56,6 +103,13 @@ app.post('/send-data-to-client', (req, res) => {
 
   res.send('Data sent to client.');
 });
+
+// Route to get the list of registered clients
+app.get('/get-registered-clients', (req, res) => {
+  const registeredClients = Array.from(clients.keys());
+  res.json({ clients: registeredClients });
+});
+
 
 const port = 3000;
 server.listen(port, () => {
